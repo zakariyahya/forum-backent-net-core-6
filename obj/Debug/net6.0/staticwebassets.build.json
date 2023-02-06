@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "yWrhFHncEUh8fHk1h6IlKRkAD/1LPR6JOb897pVr6yc=",
+  "Source": "forum",
+  "BasePath": "_content/forum",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "forum\\wwwroot",
+      "Source": "forum",
+      "ContentRoot": "C:\\Users\\Yahya\\Documents\\forum-dotnet-backend\\forum\\wwwroot\\",
+      "BasePath": "_content/forum",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}
