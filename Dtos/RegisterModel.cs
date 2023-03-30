@@ -14,6 +14,7 @@ namespace forum.Dtos
         public string email { get; set; }
         [Required]
         public string password { get; set; }
-        public string role { get; set; }
+        public string? [] roles {get; set;}
+        // public string image { get; set; }
     }
 }

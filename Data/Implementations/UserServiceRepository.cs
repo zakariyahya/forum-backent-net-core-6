@@ -1,4 +1,5 @@
 using forum.Data.Interface;
+using forum.Dtos;
 using forum.Models;
 
 namespace forum.Data.Implementations
@@ -22,10 +23,10 @@ namespace forum.Data.Implementations
             {
                 return null;
             }
-            if (!VerifyPasswordHash(password, user.passwordHash, user.passwordSalt))
-            {
-                return null;
-            }
+            // if (!VerifyPasswordHash(password, user.passwordHash, user.passwordSalt))
+            // {
+            //     return null;
+            // }
             return user;
         }
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
@@ -47,9 +48,11 @@ namespace forum.Data.Implementations
 
         public User create(User user, string password)
         {
-            if (user.role == null)
+            RegisterModel role = new RegisterModel();
+            string[] items = { "user" };
+            if (role.roles == null)
             {
-                user.role = "user";
+                role.roles = items;
             }
             if (string.IsNullOrWhiteSpace(password))
             {
@@ -59,10 +62,10 @@ namespace forum.Data.Implementations
             {
                 throw new AppException("Username \"" + user.username + "\" is already taken");
             }
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(password, out passwordHash, out passwordSalt);
-            user.passwordHash = passwordHash;
-            user.passwordSalt = passwordSalt;
+            // byte[] passwordHash, passwordSalt;
+            // CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            // user.passwordHash = passwordHash;
+            // user.passwordSalt = passwordSalt;
             context.Users.Add(user);
             context.SaveChanges();
             return user;

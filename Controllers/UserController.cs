@@ -13,24 +13,30 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace forum.Controllers
 {
+    [Authorize(Roles = "admin")]
+    [ApiController]
+    [Route("api/auth/")]
     public class UserController : ControllerBase
     {
         private readonly IUserServiceRepository repository;
+        private readonly IUserRoleRepository userRoleRepository;
         private readonly IMapper mapper;
         private readonly AppSettings appSettings;
 
-        public UserController(IUserServiceRepository repository, IMapper mapper, IOptions<AppSettings> appSettings)
+        public UserController(IUserServiceRepository repository, IUserRoleRepository userRoleRepository, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             this.repository = repository;
+            this.userRoleRepository = userRoleRepository;
             this.mapper = mapper;
             this.appSettings = appSettings.Value;
         }
 
-        [HttpPost("authenticate")]
+        [AllowAnonymous]
+        [HttpPost("signin")]
         public IActionResult authenticate([FromForm] AuthenticateModel model)
         {
             var user = repository.authenticate(model.username, model.password);
-
+            var userRole = userRoleRepository.userRoles(user.id);
             if (user == null)
             {
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -38,13 +44,25 @@ namespace forum.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(appSettings.secret);
+       
+            ClaimsIdentity getClaimsIdentity()
+            {
+                return new ClaimsIdentity( getClaims() );
+
+                Claim[] getClaims()
+                {
+                    List<Claim> claims = new List<Claim>();
+                    claims.Add(new Claim(ClaimTypes.Name, user.id.ToString()));
+                    foreach (var item in userRole)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, item.role.name));
+                    }
+                    return claims.ToArray();
+                }
+            }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.id.ToString()),
-                    new Claim(ClaimTypes.Role, user.role)
-                }),
+                Subject = getClaimsIdentity(),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -58,8 +76,8 @@ namespace forum.Controllers
                 firstName = user.firstName,
                 lastName = user.lastName,
                 email = user.email,
-                role = user.role,
-                Token = tokenString
+                // roles = user.roles,
+                accessToken = tokenString
             });
         }
 
@@ -71,6 +89,7 @@ namespace forum.Controllers
             try
             {
                 repository.create(user, model.password);
+                userRoleRepository.createUserRoles(model.roles, user);
                 return Ok(new
                 {
                     id = user.id,
@@ -78,7 +97,7 @@ namespace forum.Controllers
                     firstName = user.firstName,
                     lastName = user.lastName,
                     email = user.email,
-                    role = user.role
+                    roles = model.roles
                 });
             }
             catch (AppException ex)

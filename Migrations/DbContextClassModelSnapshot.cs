@@ -46,7 +46,7 @@ namespace forum.Migrations
                     b.ToTable("FileDetails");
                 });
 
-            modelBuilder.Entity("forum.Models.Forum", b =>
+            modelBuilder.Entity("forum.Models.ForumSubscription", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -54,17 +54,55 @@ namespace forum.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int>("content")
+                    b.Property<string>("createdBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("createdTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("forumid")
                         .HasColumnType("integer");
+
+                    b.Property<string>("lastModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("lastModifiedTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("userid")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("forumid");
+
+                    b.HasIndex("userid");
+
+                    b.ToTable("forumSubs");
+                });
+
+            modelBuilder.Entity("forum.Models.MainForum", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
                     b.Property<string>("createdBy")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("createdTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("image")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("lastModifiedBy")
@@ -72,14 +110,49 @@ namespace forum.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("lastModifiedTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("title")
                         .HasColumnType("text");
 
+                    b.Property<string>("url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("id");
 
-                    b.ToTable("forums");
+                    b.ToTable("mainForums");
+                });
+
+            modelBuilder.Entity("forum.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Imagepath")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Published")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("Ts")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("userid")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userid");
+
+                    b.ToTable("Post");
                 });
 
             modelBuilder.Entity("forum.Models.Role", b =>
@@ -95,25 +168,22 @@ namespace forum.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("createdTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("lastModifiedBy")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("lastModifiedTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("roleId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("roleName")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("forum.Models.User", b =>
@@ -136,15 +206,7 @@ namespace forum.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<byte[]>("passwordHash")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<byte[]>("passwordSalt")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("role")
+                    b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -170,14 +232,14 @@ namespace forum.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("createdTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("lastModifiedBy")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("lastModifiedTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("roleid")
                         .HasColumnType("integer");
@@ -191,7 +253,37 @@ namespace forum.Migrations
 
                     b.HasIndex("userid");
 
-                    b.ToTable("userRoles");
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("forum.Models.ForumSubscription", b =>
+                {
+                    b.HasOne("forum.Models.MainForum", "forum")
+                        .WithMany()
+                        .HasForeignKey("forumid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("forum.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("forum");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("forum.Models.Post", b =>
+                {
+                    b.HasOne("forum.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("forum.Models.UserRole", b =>

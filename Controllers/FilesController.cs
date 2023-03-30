@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers
 {
-    [Authorize(Roles = "admin, superadmin")]
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class FilesController : ControllerBase

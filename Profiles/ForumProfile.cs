@@ -8,9 +8,9 @@ namespace forum.Profiles
     {
         public ForumProfile()
         {
-            CreateMap<Forum, ForumReadDto>();
-            CreateMap<ForumCreateDto, Forum>();
-            CreateMap<ForumUpdateDto, Forum>();
+            CreateMap<MainForum, ForumReadDto>();
+            CreateMap<ForumCreateDto, MainForum>();
+            CreateMap<ForumUpdateDto, MainForum>();
 
 
         }

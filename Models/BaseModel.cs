@@ -9,6 +9,7 @@ namespace forum.Models
         {
             createdBy = "System";
             createdTime = DateTime.Now;
+            lastModifiedBy = "";
         }
 
         [Key]

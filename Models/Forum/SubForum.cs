@@ -4,7 +4,8 @@ namespace forum.Models
     {
         public string? title { get; set; }
         public string? description { get; set; }
-        public int content { get; set; }
-        public Forum forum { get; set; }
+        public string image { get; set; }
+        public string url {get; set;}
+        public MainForum mainForum { get; set; }
     }
 }

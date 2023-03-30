@@ -9,6 +9,7 @@ namespace forum.Profiles
         public UserProfile()
         {
             CreateMap<RegisterModel, User>();
+            CreateMap<RoleCreateDto, Role>();
         }
     }
 }

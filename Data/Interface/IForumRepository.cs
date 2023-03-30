@@ -1,7 +1,14 @@
+using forum.Models;
+
 namespace forum.Data.Interface
 {
-    public class IForumRepository
+    public interface IForumRepository
     {
-        // forum 
+        IEnumerable<MainForum> forums();
+        void createForum(MainForum forum);
+        void updateForum(MainForum forum);
+        void deleteForum(int id);
+        MainForum forumById(int id);
+        public bool saveChanges();
     }
 }
