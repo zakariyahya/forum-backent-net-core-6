@@ -24,7 +24,7 @@ namespace forum.Data.Implementations
 
         public MainForum forumById(int id)
         {
-            return context.mainForums.FirstOrDefault(x => x.id == id);
+            return context.mainForums.FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<MainForum> forums()

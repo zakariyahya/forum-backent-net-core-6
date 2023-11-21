@@ -7,12 +7,14 @@ using forum.Data.Interface;
 using forum.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+// AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,10 @@ const string AllowAllHeadersPolicy = "AllowAllHeadersPolicy";
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DbContextClass>();
+builder.Services.AddDbContext<DbContextClass>(options =>
+    options.UseSqlServer("ForumConnString", 
+        providerOptions => providerOptions.EnableRetryOnFailure()));
+
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy(AllowAllHeadersPolicy,

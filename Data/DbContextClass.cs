@@ -5,13 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace forum.Data
 {
-    public class DbContextClass: DbContext {
-        protected readonly IConfiguration Configuration;
-        public DbContextClass(IConfiguration configuration) {
-            Configuration = configuration;
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder options) {
-            options.UseNpgsql(Configuration.GetConnectionString("ForumConnString"));
+    public class DbContextClass : DbContext
+    {
+        public DbContextClass(DbContextOptions<DbContextClass> options) : base(options)
+        {
         }
         public DbSet<FileDetails> FileDetails { get; set; }
         public DbSet<MainForum> mainForums { get; set; }
@@ -21,10 +18,10 @@ namespace forum.Data
         public DbSet<ForumSubscription> forumSubs { get; set; }
         public virtual DbSet<Post> Post { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // Add your model configurations here if needed.
         }
     }
 }

@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Yahya\\Documents\\forum-dotnet-backend\\forum\\wwwroot\\users\\posts\\1\\Zoom_BG_Opt_1A_80fa.png",
+      "PackagePath": "staticwebassets\\users\\posts\\1\\Zoom_BG_Opt_1A_80fa.png"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.forum.props",
+      "PackagePath": "build\\forum.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.forum.props",
+      "PackagePath": "buildMultiTargeting\\forum.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.forum.props",
+      "PackagePath": "buildTransitive\\forum.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.forum.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

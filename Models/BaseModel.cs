@@ -14,7 +14,7 @@ namespace forum.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id { get; set; }
+        public int Id { get; set; }
         public string createdBy { get; set; }
         public DateTime? createdTime { get; set; }
         public string lastModifiedBy { get; set; }
